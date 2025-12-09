@@ -14,6 +14,7 @@ const Register = () => {
         role: 'LANDLORD',
     });
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const { register: registerUser } = useAuth();
     const navigate = useNavigate();
