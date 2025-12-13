@@ -1,7 +1,12 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const PrivateRoute = ({ children }) => {
+interface PrivateRouteProps {
+    children: JSX.Element;
+    allowedRoles?: string[];
+}
+
+const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
     const { user, loading } = useAuth();
 
     if (loading) {
@@ -12,7 +17,15 @@ const PrivateRoute = ({ children }) => {
         );
     }
 
-    return user ? children : <Navigate to="/login" />;
+    if (!user) {
+        return <Navigate to="/login" />;
+    }
+
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    return children;
 };
 
 export default PrivateRoute;

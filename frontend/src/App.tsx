@@ -31,20 +31,67 @@ function App() {
                     <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
                         <Route index element={<Navigate to="/dashboard" />} />
                         <Route path="dashboard" element={<Dashboard />} />
-                        <Route path="properties" element={<Properties />} />
-                        <Route path="properties/new" element={<PropertyForm />} />
-                        <Route path="properties/:id" element={<PropertyDetails />} />
-                        <Route path="properties/:id/edit" element={<PropertyForm />} />
-                        <Route path="tenants" element={<Tenants />} />
-                        <Route path="tenants/new" element={<TenantForm />} />
-                        <Route path="tenants/:id/edit" element={<TenantForm />} />
+
+                        {/* Landlord & Admin Routes */}
+                        <Route path="properties" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN', 'CARETAKER']}>
+                                <Properties />
+                            </PrivateRoute>
+                        } />
+                        <Route path="properties/new" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN']}>
+                                <PropertyForm />
+                            </PrivateRoute>
+                        } />
+                        <Route path="properties/:id" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN', 'CARETAKER']}>
+                                <PropertyDetails />
+                            </PrivateRoute>
+                        } />
+                        <Route path="properties/:id/edit" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN']}>
+                                <PropertyForm />
+                            </PrivateRoute>
+                        } />
+                        <Route path="tenants" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN', 'CARETAKER']}>
+                                <Tenants />
+                            </PrivateRoute>
+                        } />
+                        <Route path="tenants/new" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN']}>
+                                <TenantForm />
+                            </PrivateRoute>
+                        } />
+                        <Route path="tenants/:id/edit" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN']}>
+                                <TenantForm />
+                            </PrivateRoute>
+                        } />
+
+                        {/* Finance Routes */}
                         <Route path="finance" element={<Finance />} />
-                        <Route path="finance/payments/new" element={<PaymentForm />} />
-                        <Route path="maintenance" element={<Maintenance />} />
+                        <Route path="finance/payments/new" element={
+                            <PrivateRoute allowedRoles={['LANDLORD', 'ADMIN']}>
+                                <PaymentForm />
+                            </PrivateRoute>
+                        } />
+
+                        {/* Maintenance Routes */}
                         <Route path="maintenance" element={<Maintenance />} />
                         <Route path="maintenance/new" element={<ComplaintForm />} />
-                        <Route path="available-units" element={<AvailableUnits />} />
-                        <Route path="consultation" element={<ConsultationForm />} />
+
+                        {/* Tenant Routes */}
+                        <Route path="available-units" element={
+                            <PrivateRoute allowedRoles={['TENANT']}>
+                                <AvailableUnits />
+                            </PrivateRoute>
+                        } />
+                        <Route path="consultation" element={
+                            <PrivateRoute allowedRoles={['TENANT']}>
+                                <ConsultationForm />
+                            </PrivateRoute>
+                        } />
                     </Route>
                 </Routes>
             </Router>
