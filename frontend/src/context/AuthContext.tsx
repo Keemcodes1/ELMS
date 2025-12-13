@@ -1,8 +1,26 @@
-// @ts-nocheck
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authAPI } from '../services/api';
 
-const AuthContext = createContext();
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    role: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+}
+
+interface AuthContextType {
+    user: User | null;
+    loading: boolean;
+    login: (credentials: any) => Promise<any>;
+    logout: () => void;
+    register: (userData: any) => Promise<any>;
+    checkAuth: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
@@ -12,8 +30,8 @@ export const useAuth = () => {
     return context;
 };
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -34,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
-    const login = async (credentials) => {
+    const login = async (credentials: any) => {
         const response = await authAPI.login(credentials);
         localStorage.setItem('access_token', response.data.access);
         localStorage.setItem('refresh_token', response.data.refresh);
@@ -48,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
-    const register = async (userData) => {
+    const register = async (userData: any) => {
         const response = await authAPI.register(userData);
         return response.data;
     };
